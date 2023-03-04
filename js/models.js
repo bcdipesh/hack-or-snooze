@@ -73,14 +73,19 @@ class StoryList {
 
 	static async addStory(user, newStory) {
 		// query the /stories endpoint (auth required)
-		const response = await axios.post(`${BASE_URL}/stories`, {
-			token: user.loginToken,
-			story: newStory,
-		});
+		try {
+			const response = await axios.post(`${BASE_URL}/stories`, {
+				token: user.loginToken,
+				story: newStory,
+			});
 
-		newStory = new Story(response.data.story);
+			newStory = new Story(response.data.story);
 
-		return newStory;
+			return newStory;
+		} catch (err) {
+			console.err('addStory failed', err);
+			return null;
+		}
 	}
 }
 
@@ -191,6 +196,25 @@ class User {
 			);
 		} catch (err) {
 			console.error('loginViaStoredCredentials failed', err);
+			return null;
+		}
+	}
+
+	/** Adds to user favorite story.
+	 * - user - The current user
+	 * - storyId - The id of the story
+	 */
+
+	static async addFavoriteStory(user, storyId) {
+		try {
+			const response = await axios.post(
+				`${BASE_URL}/users/${user.username}/favorites/${storyId}`,
+				{
+					token: user.loginToken,
+				}
+			);
+		} catch (err) {
+			console.error('addFavoriteStory failed', err);
 			return null;
 		}
 	}
