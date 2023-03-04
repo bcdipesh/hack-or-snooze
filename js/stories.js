@@ -23,8 +23,14 @@ function generateStoryMarkup(story) {
 	// console.debug("generateStoryMarkup", story);
 
 	const hostName = story.getHostName();
+
+	const favoriteIcon = User.checkIfStoryIsFavorite(story.storyId)
+		? '<span class="fav-indicator-icon">&starf;</span>'
+		: '<span class="fav-indicator-icon">&star;</span>';
+
 	return $(`
       <li id="${story.storyId}">
+	  ${favoriteIcon}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -77,3 +83,16 @@ async function createNewStory(evt) {
 }
 
 $createStoryForm.on('submit', createNewStory);
+
+/** Handle add/remove favorite stories */
+
+async function toggleFavoriteStatus(evt) {
+	if (evt.target.className === 'fav-indicator-icon') {
+		console.debug('toggleFavoriteStatus');
+		const storyId = evt.target.parentElement.id;
+
+		await User.addRemoveFavoriteStory(currentUser, storyId);
+	}
+}
+
+$allStoriesList.on('click', toggleFavoriteStatus);

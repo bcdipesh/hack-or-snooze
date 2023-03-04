@@ -200,21 +200,49 @@ class User {
 		}
 	}
 
-	/** Adds to user favorite story.
+	/** Check if story is in favorite story list for the current user */
+
+	static checkIfStoryIsFavorite = (_storyId) =>
+		currentUser.favorites.some(({ storyId }) => storyId === _storyId);
+
+	/** Add/Remove user favorite story.
 	 * - user - The current user
 	 * - storyId - The id of the story
 	 */
 
-	static async addFavoriteStory(user, storyId) {
+	static async addRemoveFavoriteStory(user, storyId) {
+		let response;
 		try {
-			const response = await axios.post(
-				`${BASE_URL}/users/${user.username}/favorites/${storyId}`,
-				{
-					token: user.loginToken,
-				}
-			);
+			console.debug('addRemoveFavoriteStory');
+			if (!User.checkIfStoryIsFavorite(storyId)) {
+				console.debug('Add to Fav');
+				response = await axios.post(
+					`${BASE_URL}/users/${user.username}/favorites/${storyId}`,
+					{
+						token: user.loginToken,
+					}
+				);
+
+				// update icon for the story
+				$(`#${storyId}`).children().eq(0).html('&starf;');
+			} else {
+				console.debug('Remove from Fav');
+				response = await axios.delete(
+					`${BASE_URL}/users/${user.username}/favorites/${storyId}`,
+					{
+						data: {
+							token: user.loginToken,
+						},
+					}
+				);
+				// update icon for the story
+				$(`#${storyId}`).children().eq(0).html('&star;');
+			}
+
+			// update currentUser favorite stories
+			currentUser.favorites = response.data.user.favorites;
 		} catch (err) {
-			console.error('addFavoriteStory failed', err);
+			console.error('addRemoveFavoriteStory failed', err);
 			return null;
 		}
 	}
