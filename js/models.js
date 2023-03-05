@@ -87,6 +87,25 @@ class StoryList {
 			return null;
 		}
 	}
+
+	/** Removes a story
+	 * - user - The current user
+	 * - storyId - The id of the story
+	 */
+
+	static async deleteStory(user, storyId) {
+		try {
+			console.debug('deleteStory');
+			await axios.delete(`${BASE_URL}/stories/${storyId}`, {
+				data: {
+					token: user.loginToken,
+				},
+			});
+		} catch (err) {
+			console.error('deleteStory failed', err);
+			return null;
+		}
+	}
 }
 
 /******************************************************************************
