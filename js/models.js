@@ -259,7 +259,9 @@ class User {
 			}
 
 			// update currentUser favorite stories
-			currentUser.favorites = response.data.user.favorites;
+			currentUser.favorites = response.data.user.favorites.map(
+				(story) => new Story(story)
+			);
 		} catch (err) {
 			console.error('addRemoveFavoriteStory failed', err);
 			return null;

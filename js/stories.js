@@ -96,3 +96,26 @@ async function toggleFavoriteStatus(evt) {
 }
 
 $allStoriesList.on('click', toggleFavoriteStatus);
+
+/** Show user favorite stories on click on "favorites" */
+
+function showFavorites(evt) {
+	console.debug('showFavorites', evt);
+	hidePageComponents();
+
+	if (currentUser.favorites.length === 0) {
+		$noStoriesMsg.show();
+	} else {
+		$allStoriesList.empty();
+
+		currentUser.favorites.forEach((story) => {
+			const $story = generateStoryMarkup(story);
+			console.log(story);
+			$allStoriesList.append($story);
+		});
+
+		$allStoriesList.show();
+	}
+}
+
+$navFavories.on('click', showFavorites);
