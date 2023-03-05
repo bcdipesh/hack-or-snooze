@@ -24,7 +24,6 @@
 	color: black;
 	font-size: 0.85rem;
 	font-weight: normal;
-	margin: 18px 0;
 }
 
 .story-link:hover {
@@ -32,11 +31,17 @@
 }
 
 .story-author {
-	margin-left: 2em;
+	margin: 5px 14px;
+	display: block;
+	color: green;
+	font-weight: bold;
 }
 
 .story-user {
+	margin: 5px 14px;
 	display: block;
+	color: orange;
+	font-weight: bold;
 }
 
 .delete-story {
