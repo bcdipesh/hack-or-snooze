@@ -11,7 +11,8 @@
 }
 
 #stories-loading-msg,
-#no-favorites-msg {
+#no-favorites-msg,
+#no-my-stories-msg {
 	font-weight: bold;
 	font-size: 150%;
 	margin: 20px 30px;
@@ -36,4 +37,8 @@
 
 .story-user {
 	display: block;
+}
+
+.delete-story {
+	cursor: pointer;
 }

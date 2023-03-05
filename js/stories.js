@@ -74,6 +74,8 @@ async function createNewStory(evt) {
 		url,
 	});
 
+	currentUser.ownStories.push(newStory);
+
 	$createStoryForm.trigger('reset');
 
 	const $story = generateStoryMarkup(newStory);
@@ -87,15 +89,11 @@ $createStoryForm.on('submit', createNewStory);
 /** Handle add/remove favorite stories */
 
 async function toggleFavoriteStatus(evt) {
-	if (evt.target.className === 'fav-indicator-icon') {
-		console.debug('toggleFavoriteStatus');
-		const storyId = evt.target.parentElement.id;
+	console.debug('toggleFavoriteStatus');
+	const storyId = evt.target.parentElement.id;
 
-		await User.addRemoveFavoriteStory(currentUser, storyId);
-	}
+	await User.addRemoveFavoriteStory(currentUser, storyId);
 }
-
-$allStoriesList.on('click', toggleFavoriteStatus);
 
 /** Show user favorite stories on click on "favorites" */
 
@@ -110,7 +108,6 @@ function showFavorites(evt) {
 
 		currentUser.favorites.forEach((story) => {
 			const $story = generateStoryMarkup(story);
-			console.log(story);
 			$allStoriesList.append($story);
 		});
 
@@ -119,3 +116,56 @@ function showFavorites(evt) {
 }
 
 $navFavories.on('click', showFavorites);
+
+/** Show user stories on click on "my stories" */
+
+function showUserStories(evt) {
+	console.debug('showUserStories', evt);
+	hidePageComponents();
+
+	if (currentUser.ownStories.length === 0) {
+		$noMyStoriesMsg.show();
+	} else {
+		$allStoriesList.empty();
+
+		currentUser.ownStories.forEach((story) => {
+			const $story = generateStoryMarkup(story);
+			$story.prepend('<i class="fas fa-trash-alt delete-story"></i>');
+			$allStoriesList.append($story);
+		});
+
+		$allStoriesList.show();
+	}
+}
+
+$navMyStories.on('click', showUserStories);
+
+/** Handle remove user story */
+
+async function deleteStory(evt) {
+	const storyId = evt.target.parentElement.id;
+
+	await User.deleteStory(currentUser, storyId);
+
+	currentUser.ownStories = currentUser.ownStories.filter(
+		(story) => story.storyId !== storyId
+	);
+
+	currentUser.favorites = currentUser.favorites.filter(
+		(story) => story.storyId !== storyId
+	);
+
+	storyList.stories = storyList.stories.filter(
+		(story) => story.storyId !== storyId
+	);
+
+	showUserStories(null);
+}
+
+$allStoriesList.on('click', (evt) => {
+	if (evt.target.className === 'fav-indicator-icon') {
+		toggleFavoriteStatus(evt);
+	} else if (evt.target.className === 'fas fa-trash-alt delete-story') {
+		deleteStory(evt);
+	}
+});
