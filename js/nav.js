@@ -8,6 +8,7 @@
 
 function navAllStories(evt) {
 	console.debug('navAllStories', evt);
+	isCurrentlyOnMyStories = false;
 	hidePageComponents();
 	putStoriesOnPage();
 }
@@ -18,6 +19,7 @@ $body.on('click', '#nav-all', navAllStories);
 
 function navSubmitClick(evt) {
 	console.debug('navSubmitClick', evt);
+	isCurrentlyOnMyStories = false;
 	$createStoryForm.show('ease');
 }
 

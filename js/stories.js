@@ -99,6 +99,7 @@ async function toggleFavoriteStatus(evt) {
 
 function showFavorites(evt) {
 	console.debug('showFavorites', evt);
+	isCurrentlyOnMyStories = false;
 	hidePageComponents();
 
 	if (currentUser.favorites.length === 0) {
@@ -121,6 +122,7 @@ $navFavories.on('click', showFavorites);
 
 function showUserStories(evt) {
 	console.debug('showUserStories', evt);
+	isCurrentlyOnMyStories = true;
 	hidePageComponents();
 
 	if (currentUser.ownStories.length === 0) {
@@ -130,7 +132,9 @@ function showUserStories(evt) {
 
 		currentUser.ownStories.forEach((story) => {
 			const $story = generateStoryMarkup(story);
-			$story.prepend('<i class="fas fa-trash-alt delete-story"></i>');
+			$story.prepend(
+				'<span class="fas fa-trash-alt delete-story"></span>'
+			);
 			$allStoriesList.append($story);
 		});
 

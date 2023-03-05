@@ -1,5 +1,8 @@
 'use strict';
 
+// global flag to track if user is currently viewing my stories
+let isCurrentlyOnMyStories = false;
+
 // So we don't have to keep re-finding things on page, find DOM elements once:
 
 const $body = $('body');

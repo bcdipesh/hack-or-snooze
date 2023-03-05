@@ -224,7 +224,21 @@ class User {
 				);
 
 				// update icon for the story
-				$(`#${storyId}`).children().eq(0).html('&starf;');
+				if (isCurrentlyOnMyStories) {
+					$(`#${storyId}`)
+						.children()
+						.eq(1)
+						.replaceWith(
+							'<span class="fav-indicator-icon">&starf;</span>'
+						);
+				} else {
+					$(`#${storyId}`)
+						.children()
+						.eq(0)
+						.replaceWith(
+							'<span class="fav-indicator-icon">&starf;</span>'
+						);
+				}
 			} else {
 				console.debug('Remove from Fav');
 				response = await axios.delete(
@@ -236,7 +250,21 @@ class User {
 					}
 				);
 				// update icon for the story
-				$(`#${storyId}`).children().eq(0).html('&star;');
+				if (isCurrentlyOnMyStories) {
+					$(`#${storyId}`)
+						.children()
+						.eq(1)
+						.replaceWith(
+							'<span class="fav-indicator-icon">&star;</span>'
+						);
+				} else {
+					$(`#${storyId}`)
+						.children()
+						.eq(0)
+						.replaceWith(
+							'<span class="fav-indicator-icon">&star;</span>'
+						);
+				}
 			}
 
 			// update currentUser favorite stories
